@@ -33,3 +33,39 @@ url = 'https://yandex.ru/search/?text=' +  url
 print(url)
 
 https://yandex.ru/search/?text=как%20стать%20бэкенд-разработчиком
+________________________________________________________________________________________________________________________________________
+
+!!!!!!Кириллица в адресной строке!!!!!!!
+Немного программирования
+Кодировать URL умеют не только браузеры. 
+Вы тоже можете, если захотите. За инструментами далеко ходить не придётся: в Python есть библиотека urllib.parse.
+
+urllib.parse.quote(...)  # зашифрованная строка
+urllib.parse.unquote(...)  # расшифрованная обратно строка
+
+import urllib.parse
+
+
+strings = [
+    'что такое backend',
+    'Привет!',
+    ' ',  # просто пробел
+    'letiště',  # аэропорт по-чешски
+    'München',  # крупнейший город Баварии
+    'Champs-Élysées',  # Елисейские поля
+    '東京',  # а это Токио, столица Японии  :)
+]
+
+for s in strings:
+    encoded = urllib.parse.quote(s)  # зашифрованная строка
+    decoded = urllib.parse.unquote(encoded)  # расшифрованная обратно строка
+    print(decoded, '-', encoded)
+    
+
+что такое backend - %D1%87%D1%82%D0%BE%20%D1%82%D0%B0%D0%BA%D0%BE%D0%B5%20backend
+Привет! - %D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21
+  - %20
+letiště - leti%C5%A1t%C4%9B
+München - M%C3%BCnchen
+Champs-Élysées - Champs-%C3%89lys%C3%A9es
+東京 - %E6%9D%B1%E4%BA%AC
