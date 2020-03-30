@@ -1,0 +1,67 @@
+До сих пор мы разглядывали заголовки HTTP-запросов и ответов в браузере. Теперь сделаем это в коде.
+Заглянем в служебную информацию полученного HTTP-ответа:
+import requests
+
+response = requests.get('https://ya.ru/white')
+
+# вот мы узнали, что код ответа 200 и заполучили это число в свой код:
+code = response.status_code
+print(f'Код ответа = {code}')
+
+# а вот мы и заголовки читаем, и выводим их форматированной строкой
+# с примечанием, каким захочется, на любом языке
+
+headers = response.headers
+print(f'Тип содержимого: {headers["content-type"]}')
+print(f'Время ответа: {headers["date"]}')
+Код ответа = 200
+Тип содержимого: text/html; charset=UTF-8
+Время ответа: Thu, 13 Jun 2019 15:25:13 GMT
+
+Код HTTP-ответа (status_code) говорит о том, что запрошенная страница была возвращена успешно: 200 означает Ok.
+Заголовки ответа доступны как словарь headers: по ключу — названию заголовка — доступно его значение.
+Сетевой запрос может завершиться неуспехом, например:
+response = requests.get('https://praktikum.yandex.ru/notfound')
+print(response.status_code)
+
+404
+
+Мы запросили страницу, которой нет в интернете, на что заслуженно получили в ответ код ошибки 404 Not found — «не найдено». Но и в браузере мы получили бы то же самое.
+Заголовки есть не только у ответов, но и у запросов. В уроке 8 темы 7 вы уже смотрели на них в браузере. Когда вам понадобится передать заголовки в HTTP-запросе — соберите их в словаре, и передайте его как аргумент headers функции get():
+import requests
+
+request_headers = {
+    'Accept-Language': 'ru'  # попросим материал на русском языке
+}
+
+# сходим почитать блоги про IT, строкой передаём URL платформы habr
+
+response = requests.get('https://habr.com', headers=request_headers)
+
+print(response.text)
+<!DOCTYPE html>
+<html lang="ru" class="no-js">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta content='width=1024' name='viewport'>
+<title>Лучшие публикации за сутки / Хабр</title>
+<meta name="description" content="Лучшие публикации за последние 24 часа" />
+Сравните результат с:
+import requests
+
+request_headers = {
+    'Accept-Language': 'en'  # попросим материал на английском языке
+}
+
+# сходим почитать блоги про IT
+response = requests.get('https://habr.com/', headers=request_headers)
+print(response.text)
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta content='width=1024' name='viewport'>
+<title>Top of the last 24 hours / Habr</title>
+<meta name="description" content="Top of the last 24 hours" />
+
+Так, подбирая параметры и заголовки, вы можете запрашивать с сервера не всё, что там есть, а то, что нужно именно вам.
